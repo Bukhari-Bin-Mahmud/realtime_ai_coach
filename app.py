@@ -77,11 +77,17 @@ st.set_page_config(page_title="Realtime AI Spotter", layout="centered")
 st.title("Realtime AI Spotter 👾")
 st.markdown("Set your camera up sideways to analyze your push-up geometry.")
 
-# Launch browser webstream with STUN configuration to bypass network firewalls
+# Launch browser webstream with strict media constraints and an expanded STUN pool
 webrtc_streamer(
     key="ai-spotter", 
     video_processor_factory=PushupProcessor,
+    media_stream_constraints={"video": True, "audio": False}, # Stops the browser from trying to establish audio tunnels
     rtc_configuration={
-        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+        "iceServers": [
+            {"urls": ["stun:stun.l.google.com:19302"]},
+            {"urls": ["stun:stun1.l.google.com:19302"]},
+            {"urls": ["stun:stun2.l.google.com:19302"]},
+            {"urls": ["stun:stun.services.mozilla.com"]}
+        ]
     }
 )
